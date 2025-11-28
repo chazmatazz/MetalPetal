@@ -28,6 +28,9 @@ struct HomeView: View {
                     NavigationLink(destination: VideoProcessorView()) {
                         Text("Video Processing")
                     }
+                    NavigationLink(destination: VideoProcessorFractalView()) {
+                        Text("Fractal Video Processing")
+                    }
                 }
                 Group {
                     NavigationLink(destination: BlendModesView()) {

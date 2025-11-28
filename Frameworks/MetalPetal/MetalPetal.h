@@ -12,6 +12,7 @@
 #import "MTIColorMatrixFilter.h"
 #import "MTICropFilter.h"
 #import "MTIDotScreenFilter.h"
+#import "MTIFractalFilter.h"
 #import "MTIFilter.h"
 #import "MTIHexagonalBokehBlurFilter.h"
 #import "MTIHighPassSkinSmoothingFilter.h"

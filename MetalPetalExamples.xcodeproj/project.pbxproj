@@ -3,11 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2AF4F087EEBBECD071A474BA /* Pods_MetalPetalExamples_MetalPetalExamples__macOS_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32F118E951611EE75B4F2801 /* Pods_MetalPetalExamples_MetalPetalExamples__macOS_.framework */; };
+		476A4AA42ED61590006601B0 /* VideoProcessorFractalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476A4AA32ED61590006601B0 /* VideoProcessorFractalView.swift */; };
+		476A4AA52ED61590006601B0 /* VideoProcessorFractalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476A4AA32ED61590006601B0 /* VideoProcessorFractalView.swift */; };
 		9D492985261E19E80011E8AF /* MetalPetalExamplesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D492972261E19E70011E8AF /* MetalPetalExamplesApp.swift */; };
 		9D492986261E19E80011E8AF /* MetalPetalExamplesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D492972261E19E70011E8AF /* MetalPetalExamplesApp.swift */; };
 		9D492989261E19E80011E8AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D492974261E19E80011E8AF /* Assets.xcassets */; };
@@ -80,6 +82,7 @@
 		06FD16DA7001A42C3776E095 /* Pods-MetalPetalExamples-MetalPetalExamples (iOS).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalPetalExamples-MetalPetalExamples (iOS).debug.xcconfig"; path = "Target Support Files/Pods-MetalPetalExamples-MetalPetalExamples (iOS)/Pods-MetalPetalExamples-MetalPetalExamples (iOS).debug.xcconfig"; sourceTree = "<group>"; };
 		32F118E951611EE75B4F2801 /* Pods_MetalPetalExamples_MetalPetalExamples__macOS_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalPetalExamples_MetalPetalExamples__macOS_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		33BF35C8DC0C16F75B3F1984 /* Pods_MetalPetalExamples_MetalPetalExamples__iOS_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalPetalExamples_MetalPetalExamples__iOS_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		476A4AA32ED61590006601B0 /* VideoProcessorFractalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProcessorFractalView.swift; sourceTree = "<group>"; };
 		9D492972261E19E70011E8AF /* MetalPetalExamplesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPetalExamplesApp.swift; sourceTree = "<group>"; };
 		9D492974261E19E80011E8AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D492979261E19E80011E8AF /* MetalPetalExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalPetalExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +190,7 @@
 				9D4929BA261E1B580011E8AF /* ImageFilterView.swift */,
 				9D4929BF261E1B580011E8AF /* CameraFilterView.swift */,
 				9D4929B6261E1B580011E8AF /* VideoProcessorView.swift */,
+				476A4AA32ED61590006601B0 /* VideoProcessorFractalView.swift */,
 				9D4929AC261E1B580011E8AF /* BlendModesView.swift */,
 				9D4929BB261E1B580011E8AF /* BokehEffectView.swift */,
 				9D4929B8261E1B580011E8AF /* CLAHEFilterView.swift */,
@@ -394,9 +398,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MetalPetalExamples-MetalPetalExamples (iOS)/Pods-MetalPetalExamples-MetalPetalExamples (iOS)-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MetalPetalExamples-MetalPetalExamples (iOS)/Pods-MetalPetalExamples-MetalPetalExamples (iOS)-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -411,9 +419,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MetalPetalExamples-MetalPetalExamples (macOS)/Pods-MetalPetalExamples-MetalPetalExamples (macOS)-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MetalPetalExamples-MetalPetalExamples (macOS)/Pods-MetalPetalExamples-MetalPetalExamples (macOS)-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -484,6 +496,7 @@
 				9D4929CD261E1B580011E8AF /* SceneKitSupportView.swift in Sources */,
 				9D4929CB261E1B580011E8AF /* PixelBufferPoolBackedImageRenderer.swift in Sources */,
 				9D4929D9261E1B580011E8AF /* NoteView.swift in Sources */,
+				476A4AA42ED61590006601B0 /* VideoProcessorFractalView.swift in Sources */,
 				9D4929C5261E1B580011E8AF /* BouncingBallsView.swift in Sources */,
 				9D4929DB261E1B580011E8AF /* StateObjectSupport.swift in Sources */,
 				9D4929E9261E1B580011E8AF /* CLAHEFilterView.swift in Sources */,
@@ -516,6 +529,7 @@
 				9D4929CE261E1B580011E8AF /* SceneKitSupportView.swift in Sources */,
 				9D4929CC261E1B580011E8AF /* PixelBufferPoolBackedImageRenderer.swift in Sources */,
 				9D4929DA261E1B580011E8AF /* NoteView.swift in Sources */,
+				476A4AA52ED61590006601B0 /* VideoProcessorFractalView.swift in Sources */,
 				9D4929C6261E1B580011E8AF /* BouncingBallsView.swift in Sources */,
 				9D4929DC261E1B580011E8AF /* StateObjectSupport.swift in Sources */,
 				9D4929EA261E1B580011E8AF /* CLAHEFilterView.swift in Sources */,
@@ -664,14 +678,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = YWAZZNBUPH;
+				DEVELOPMENT_TEAM = P9NVMJ73GD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MetalPetalExamples/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					/usr/lib/swift,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples2;
 				PRODUCT_NAME = MetalPetalExamples;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -686,14 +705,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = YWAZZNBUPH;
+				DEVELOPMENT_TEAM = P9NVMJ73GD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MetalPetalExamples/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					/usr/lib/swift,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples2;
 				PRODUCT_NAME = MetalPetalExamples;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -711,7 +735,7 @@
 				CODE_SIGN_ENTITLEMENTS = MetalPetalExamples/macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YWAZZNBUPH;
+				DEVELOPMENT_TEAM = P9NVMJ73GD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MetalPetalExamples/macOS/Info.plist;
@@ -719,7 +743,12 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					/usr/lib/swift,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples2;
 				PRODUCT_NAME = MetalPetalExamples;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -735,7 +764,7 @@
 				CODE_SIGN_ENTITLEMENTS = MetalPetalExamples/macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YWAZZNBUPH;
+				DEVELOPMENT_TEAM = P9NVMJ73GD;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MetalPetalExamples/macOS/Info.plist;
@@ -743,7 +772,12 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					/usr/lib/swift,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.metalpetal.MetalPetalExamples2;
 				PRODUCT_NAME = MetalPetalExamples;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
