@@ -44,7 +44,7 @@ namespace metalpetal {
             uv /= 1.1;
             uv += .05;
             uv *= 1.;
-            float t = (time +6.) * .3;
+            float t = (time -6.) * .3;
             float2 c = uv - float2(0.5);
             float d = length(c);
             float a = atan2(c.y, c.x);
@@ -110,15 +110,15 @@ namespace metalpetal {
 
         return a + b*cos( 6.28318*(c*t+d) );
     }
+    
+    
 
     //https://www.shadertoy.com/view/mtyGWy
-    fragment float4 fractalAFragment( VertexOut vertexIn [[ stage_in ]],
-                           texture2d<float, access::sample> colorTexture [[ texture(0) ]],
-                           sampler colorSampler [[ sampler(0) ]],
-                           constant float &time [[buffer(1)]]
+    METAL_FUNC float2 pattern (   float2 textureCoordinate,
+                             float time
                            )
     {
-        float2 uv = 2. * (vertexIn.textureCoordinate - 0.5);
+        float2 uv = 2. * (textureCoordinate - 0.5);
         float2 uv0 = uv;
         float3 finalColor = float3(0.0);
         
@@ -137,10 +137,7 @@ namespace metalpetal {
             finalColor += col * d;
         }
         
-        return colorTexture.sample(colorSampler, vertexIn.textureCoordinate+finalColor.xy/512.);
-        
-        
-       //fragColor = texture(iChannel0, fragCoord/iResolution.xy + finalColor.xy/512.);
+        return textureCoordinate+finalColor.xy/512.;
     }
     
     // Copyright Inigo Quilez, 2013 - https://iquilezles.org/
@@ -199,20 +196,16 @@ namespace metalpetal {
         return d;
     }
 
-    fragment float4 fractalFragment( VertexOut vertexIn [[ stage_in ]],
-                           texture2d<float, access::sample> colorTexture [[ texture(0) ]],
-                           sampler colorSampler [[ sampler(0) ]],
-                           constant float &time [[buffer(1)]]
-                           )
+    METAL_FUNC float2 mandelbrot( float2 textureCoordinate, float time                           )
     {
         
-        float2 p = 2. * (vertexIn.textureCoordinate - 0.5);
+        float2 p = 2. * (textureCoordinate - 0.5);
         float d = length(p);
-        float a = atan2(p.y, p.x);
+        //float a = atan2(p.y, p.x);
         
         // animation
-        float tz = 0.5 - 0.5*cos(0.225*time);
-        float zoo = pow( 0.5, 13.0*tz );
+        float tz = 0.5 - 0.5*cos(0.225*(time-63));
+        float zoo = 1.*pow( 0.5, 13.0*tz );
         float2 c = float2(-0.05,.6805) + p*zoo;
 
         // distance to Mandelbrot
@@ -222,9 +215,18 @@ namespace metalpetal {
         mandebrotD = clamp( pow(4.0*mandebrotD/zoo,0.2), 0.0, 1.0 );
         //d =pow(d,.1);
         //d = 1.0-1.0/(1.0+1000.0*d);
+        return textureCoordinate+d*d*float2(mandebrotD)/10.;
         
-        
-        return colorTexture.sample(colorSampler, vertexIn.textureCoordinate+d*d*float2(mandebrotD)/10.);
+    }
+    
+    fragment float4 fractalFragment( VertexOut vertexIn [[ stage_in ]],
+                           texture2d<float, access::sample> colorTexture [[ texture(0) ]],
+                           sampler colorSampler [[ sampler(0) ]],
+                           constant float &time [[buffer(1)]]
+                           )
+    {
+        float fade = smoothstep(140, 150, time);
+        return colorTexture.sample(colorSampler, (1-fade) * pattern(vertexIn.textureCoordinate, time) + fade * mandelbrot(vertexIn.textureCoordinate, time));
     }
 
     // TODO:
