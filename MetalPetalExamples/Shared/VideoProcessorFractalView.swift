@@ -109,7 +109,7 @@ struct VideoProcessorFractalView: View {
                                             try? FileManager.default.removeItem(at: url)
                                             try FileManager.default.moveItem(at: outputURL, to: url)
                                         } catch {
-                                            VideoProcessorView.showErrorAlert(error: error)
+                                            VideoProcessorFractalView.showErrorAlert(error: error)
                                         }
                                     } else {
                                         try? FileManager.default.removeItem(at: outputURL)
