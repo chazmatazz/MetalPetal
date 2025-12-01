@@ -82,6 +82,8 @@
 		06FD16DA7001A42C3776E095 /* Pods-MetalPetalExamples-MetalPetalExamples (iOS).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetalPetalExamples-MetalPetalExamples (iOS).debug.xcconfig"; path = "Target Support Files/Pods-MetalPetalExamples-MetalPetalExamples (iOS)/Pods-MetalPetalExamples-MetalPetalExamples (iOS).debug.xcconfig"; sourceTree = "<group>"; };
 		32F118E951611EE75B4F2801 /* Pods_MetalPetalExamples_MetalPetalExamples__macOS_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalPetalExamples_MetalPetalExamples__macOS_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		33BF35C8DC0C16F75B3F1984 /* Pods_MetalPetalExamples_MetalPetalExamples__iOS_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetalPetalExamples_MetalPetalExamples__iOS_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		47436A112EDD491E008B7000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		47436A122EDD4957008B7000 /* Info 2.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info 2.plist"; sourceTree = "<group>"; };
 		476A4AA32ED61590006601B0 /* VideoProcessorFractalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProcessorFractalView.swift; sourceTree = "<group>"; };
 		9D492972261E19E70011E8AF /* MetalPetalExamplesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPetalExamplesApp.swift; sourceTree = "<group>"; };
 		9D492974261E19E80011E8AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -167,6 +169,8 @@
 				C56F5F1EE4A42DDCD7B0159C /* Pods-MetalPetalExamples-MetalPetalExamples (iOS).release.xcconfig */,
 				B378FBB57E99C90A34544BF4 /* Pods-MetalPetalExamples-MetalPetalExamples (macOS).debug.xcconfig */,
 				9E1DD1CD19A8033D4E0152B9 /* Pods-MetalPetalExamples-MetalPetalExamples (macOS).release.xcconfig */,
+				47436A112EDD491E008B7000 /* Info.plist */,
+				47436A122EDD4957008B7000 /* Info 2.plist */,
 			);
 			path = Pods;
 			sourceTree = "<group>";

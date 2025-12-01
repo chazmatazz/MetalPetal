@@ -10,6 +10,9 @@
 using namespace metal;
 using namespace metalpetal;
 
+#define PI 3.14159265359
+#define RSY 0.30 // length of each tree root trunk in NDC
+
 namespace metalpetal {
     namespace fractal {
         
@@ -41,7 +44,7 @@ namespace metalpetal {
             uv /= 1.1;
             uv += .05;
             uv *= 1.;
-            float t = time * .3;
+            float t = (time +6.) * .3;
             float2 c = uv - float2(0.5);
             float d = length(c);
             float a = atan2(c.y, c.x);
@@ -66,7 +69,7 @@ namespace metalpetal {
             return p.x>rand.x&&p.y>rand.y&&p.x<rand.x+size&&p.y<rand.y+size;
         }
         
-        fragment float4 fractalFragment( VertexOut vertexIn [[ stage_in ]],
+        fragment float4 glitchFragment( VertexOut vertexIn [[ stage_in ]],
                                texture2d<float, access::sample> colorTexture [[ texture(0) ]],
                                sampler colorSampler [[ sampler(0) ]],
                                constant float &time [[buffer(1)]]
@@ -109,7 +112,7 @@ namespace metalpetal {
     }
 
     //https://www.shadertoy.com/view/mtyGWy
-    fragment float4 patternFragment( VertexOut vertexIn [[ stage_in ]],
+    fragment float4 fractalAFragment( VertexOut vertexIn [[ stage_in ]],
                            texture2d<float, access::sample> colorTexture [[ texture(0) ]],
                            sampler colorSampler [[ sampler(0) ]],
                            constant float &time [[buffer(1)]]
@@ -135,6 +138,9 @@ namespace metalpetal {
         }
         
         return colorTexture.sample(colorSampler, vertexIn.textureCoordinate+finalColor.xy/512.);
+        
+        
+       //fragColor = texture(iChannel0, fragCoord/iResolution.xy + finalColor.xy/512.);
     }
     
     // Copyright Inigo Quilez, 2013 - https://iquilezles.org/
@@ -193,7 +199,7 @@ namespace metalpetal {
         return d;
     }
 
-    fragment float4 mandelbrotFragment( VertexOut vertexIn [[ stage_in ]],
+    fragment float4 fractalFragment( VertexOut vertexIn [[ stage_in ]],
                            texture2d<float, access::sample> colorTexture [[ texture(0) ]],
                            sampler colorSampler [[ sampler(0) ]],
                            constant float &time [[buffer(1)]]
@@ -201,26 +207,24 @@ namespace metalpetal {
     {
         
         float2 p = 2. * (vertexIn.textureCoordinate - 0.5);
-
+        float d = length(p);
+        float a = atan2(p.y, p.x);
+        
         // animation
         float tz = 0.5 - 0.5*cos(0.225*time);
         float zoo = pow( 0.5, 13.0*tz );
         float2 c = float2(-0.05,.6805) + p*zoo;
 
         // distance to Mandelbrot
-        float d = distanceToMandelbrot(c);
+        float mandebrotD = distanceToMandelbrot(c);
         
         // do some soft coloring based on distance
-        d = clamp( pow(4.0*d/zoo,0.2), 0.0, 1.0 );
+        mandebrotD = clamp( pow(4.0*mandebrotD/zoo,0.2), 0.0, 1.0 );
         //d =pow(d,.1);
         //d = 1.0-1.0/(1.0+1000.0*d);
         
         
-        float3 col = float3(d);
-        
-        
-        return colorTexture.sample(colorSampler, vertexIn.textureCoordinate+col.xy/10.);
-        //return float4( col, 1.0 );
+        return colorTexture.sample(colorSampler, vertexIn.textureCoordinate+d*d*float2(mandebrotD)/10.);
     }
 
     // TODO:
@@ -347,7 +351,7 @@ namespace metalpetal {
         return float2(.5*d*cos(a), .5*d*sin(a))+float2(0.5);
     }
  
-    fragment float4 glitchFragment( VertexOut vertexIn [[ stage_in ]],
+    fragment float4 glitch2Fragment( VertexOut vertexIn [[ stage_in ]],
                                     texture2d<float, access::sample> colorTexture [[ texture(0) ]],
                                     sampler colorSampler [[ sampler(0) ]],
                                     constant float &time [[buffer(1)]]
@@ -388,5 +392,298 @@ namespace metalpetal {
         
         return fragColor;
     }
+    
+    // "Psychofract" by Carlos Ureña - 2015
+    // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float3x3 RotateMat( float rads )
+    {
+       float c = cos(rads),
+             s = sin( rads ) ;
+       
+       return float3x3(  c,  s, 0.0,
+                    -s,   c, 0.0,
+                   0.0, 0.0, 1.0  );
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float3x3 TranslateMat( float2 d )
+    {
+       return float3x3(  1.0, 0.0, 0.0,
+                     0.0, 1.0, 0.0,
+                     d.x, d.y, 1.0 );
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float3x3 ScaleMat( float2 s )
+    {
+       return float3x3( s.x, 0.0, 0.0,
+                    0.0, s.y, 0.0,
+                    0.0, 0.0, 1.0 );
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float3x3 ChangeFrameToMat( float2 org, float angg, float scale )
+    {
+       float angr = (angg*PI)/180.0 ;
+       return
+            ScaleMat( float2( 1.0/scale, 1.0/scale ) )
+          * RotateMat( -angr )
+          * TranslateMat( -org ) ;
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float RectangleDistSq( float3 p )
+    {
+       if ( 0.0 <= p.y && p.y <= RSY )
+           return p.x * p.x;
+        
+       if (p.y > RSY)
+           return p.x*p.x + (p.y-RSY)*(p.y-RSY) ;
+        
+       return p.x*p.x + p.y*p.y ;
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float BlendDistSq( float d1, float d2, float d3 )
+    {
+       float dmin = min( d1, min(d2,d3)) ;
+          
+       return 0.5*dmin ;
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float4 ColorF( float distSq, float angDeg )
+    {
+       float b = min(1.0, 0.1/(sqrt(distSq)+0.1)),
+             v = 0.5*(1.0+cos( 200.0*angDeg/360.0 + b*15.0*PI ));
+         
+       return float4( b*b*b,b*b,0.0,distSq) ; // returns squared distance in alpha component
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float Trunk4DistSq( float3 p )
+    {
+       float d1 = RectangleDistSq( p );
+        
+       return d1 ;
+    }
+
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float Trunk3DistSq( float3x3 tran1, float3x3 tran2, float3 p )
+    {
+       float d1 = RectangleDistSq( p ),
+             d2 = Trunk4DistSq( tran1*p ),
+             d3 = Trunk4DistSq( tran2*p );
+          
+       return BlendDistSq( d1, d2, d3 ) ;
+    }
+
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float Trunk2DistSq( float3x3 tran1, float3x3 tran2, float3 p )
+    {
+       float d1 = RectangleDistSq( p ),
+             d2 = Trunk3DistSq( tran1, tran2, tran1*p ),
+             d3 = Trunk3DistSq( tran1, tran2, tran2*p );
+        
+       return BlendDistSq( d1, d2, d3 ) ;
+    }
+
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float Trunk1DistSq( float3x3 tran1, float3x3 tran2, float3 p )
+    {
+       float d1 = RectangleDistSq( p ) ,
+             d2 = Trunk2DistSq( tran1, tran2, tran1*p ),
+             d3 = Trunk2DistSq( tran1, tran2, tran2*p );
+        
+       return BlendDistSq( d1, d2, d3 ) ;
+    }
+
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float Trunk0DistSq( float3x3 tran1, float3x3 tran2, float3 p )
+    {
+       float d1 = RectangleDistSq( p ) ,
+             d2 = Trunk1DistSq( tran1, tran2, tran1*p ),
+             d3 = Trunk1DistSq(tran1, tran2, tran2*p );
+        
+       return BlendDistSq( d1, d2, d3 ) ;
+    }
+    // -----------------------------------------------------------------------------
+    // compute the color and distance to tree, for a point in NDC coords
+
+    METAL_FUNC float4 ComputeColorNDC( float3x3 tran1, float3x3 tran2, float3 p, float angDeg )
+    {
+       float2 org = float2(0.5,0.5) ;
+       float4 col = float4( 0.0, 0.0, 0.0, 1.0 );
+       float dmin ;
+        
+       for( int i = 0 ; i < 4 ; i++ )
+       {
+          float3x3 m = ChangeFrameToMat( org, angDeg + float(i)*90.0, 0.7 );
+             float3 p_transf = m*p ;
+          float dminc = Trunk0DistSq( tran1, tran2, p_transf ) ;
+                
+          if ( i == 0 )
+             dmin = dminc ;
+          else if ( dminc < dmin )
+             dmin = dminc ;
+       }
+       return ColorF( dmin, angDeg ); // returns squared dist in alpha component
+    }
+    // -----------------------------------------------------------------------------
+
+    METAL_FUNC float3 ComputeNormal( float3x3 tran1, float3x3 tran2, float3 p, float dd, float ang, float4 c00 )
+    {
+       float4   //c00  = ComputeColorNDC( p, ang )  ,
+             c10  = ComputeColorNDC( tran1, tran2, p + float3(dd,0.0,0.0), ang )  ,
+             c01  = ComputeColorNDC( tran1, tran2, p + float3(0.0,dd,0.0) , ang ) ;
+       float h00  = sqrt(c00.a),
+             h10  = sqrt(c10.a),
+             h01  = sqrt(c01.a);
+       float3  tanx = float3( dd, 0.0, h10-h00 ),
+             tany = float3( 0.0, dd, h01-h00 );
+       float3  n    = normalize( cross( tanx,tany ) );
+           
+       if ( n.z < 0.0 ) n *= -1.0 ;
+       return n ;
+    }
+
+    // -----------------------------------------------------------------------------
+
+    fragment float4 treeFragment( VertexOut vertexIn [[ stage_in ]],
+                                    texture2d<float, access::sample> colorTexture [[ texture(0) ]],
+                                    sampler colorSampler [[ sampler(0) ]],
+                                    constant float &time [[buffer(1)]]
+                                    )
+    {
+       
+       const float width = 0.1 ;
+
+       
+       float2  res  = float2(1.) ;
+       float mind = min(res.x,res.y);
+       float2  pos  = vertexIn.textureCoordinate ;
+       float x0   = (res.x - mind)/2.0 ,
+             y0   = (res.y - mind)/2.0 ,
+             px   = pos.x - x0 ,
+             py   = pos.y - y0 ;
+          
+      
+       // compute 'tran1' and 'tran2':
+        
+       float2  org1      = float2( 0.0, RSY ) ;
+       float ang1_deg  = +20.0 + 30.00*cos( 2.0*PI*time/4.05 ),
+             scale1    = +0.85 +  0.40*cos( 2.0*PI*time/2.10 )  ;
+
+       float2  org2      = float2( 0.0, RSY ) ;
+       float ang2_deg  = -30.0 + 40.00*sin( 2.0*PI*time/2.52 ),
+             scale2    = +0.75 +  0.32*sin( 2.0*PI*time/4.10 )  ;
+       
+       float3x3 tran1 = ChangeFrameToMat( org1, ang1_deg, scale1 ) ;
+       float3x3 tran2 = ChangeFrameToMat( org2, ang2_deg, scale2 ) ;
+       
+       // compute pixel color (pixCol)
+        
+       float mainAng = 360.0*time/15.0 ,    // main angle, proportional to time
+             dd      = 1.0/float(mind) ;           // pixel width or height in ndc
+       float3  pixCen  = float3( px*dd, py*dd, 1.0 ) ; // pixel center
+       float4  pixCol  = ComputeColorNDC( tran1, tran2, pixCen, mainAng ),
+             resCol  ;
+       
+       // compute output color as a function 'use_normal'
+       
+        const bool use_gradient = false ;
+        
+       if ( use_gradient )
+       {
+          float3 nor     = ComputeNormal( tran1, tran2, pixCen, dd, mainAng, pixCol );
+          float4 gradCol = float4( max(nor.x,0.0), max(nor.y,0.0), max(nor.z,0.0), 1.0 ) ;
+           
+          resCol = 0.8*pixCol+ 0.2*gradCol ;
+       }
+       else
+          resCol = pixCol ;
+          
+        return colorTexture.sample(colorSampler, vertexIn.textureCoordinate+resCol.xy/100.);
+        
+       
+    }
+    
+    
+#define cProd(a, b) float2(a.x*b.x - a.y*b.y, a.x*b.y + a.y*b.x)
+
+float2 cPwr( float2 z, int n )
+{
+    float2 memo = z;
+    n--;
+    
+    for (int i=1; i<1000000000; i++)
+    {
+        memo = cProd(memo, z);
+        if (i>=n) {break;}
+    }
+    
+    return memo;
+}
+
+float2 julia( float2 z, float2 c, int d )
+{
+    return cPwr(z, d) + c;
+}
+
+bool checkPoint( float2 z, float2 c, int d )
+{
+    bool result;
+    float2 memo = z;
+   
+    for ( int i = 0; i <= 100; i++ )
+    {
+        if (length( memo ) > 2.0) {break;}
+        memo = julia(memo, c, d);
+    }
+    
+    if ( length( memo ) < 2.0 )
+    {
+        result = true;
+    }
+    else
+    {
+        result = false;
+    }
+    
+    return result;
+}
+
+    fragment float4 juliaFragment( VertexOut vertexIn [[ stage_in ]],
+                                    texture2d<float, access::sample> colorTexture [[ texture(0) ]],
+                                    sampler colorSampler [[ sampler(0) ]],
+                                    constant float &time [[buffer(1)]]
+                                    )
+    {
+        float2 fragCoord = vertexIn.textureCoordinate;
+        float2 iResolution = float2(1.);
+    float scale = .5;
+    float offX = 0.0;
+    float offY = 0.0;
+    float t = .1*sin(time);
+
+    float2 z = fragCoord * scale + float2(-scale*(iResolution.x/2.0 - offX), -scale*(iResolution.y/2.0 - offY));
+    float2 c = float2(-.391+t, -.587);
+    int d = 2;
+    
+        float bounded = checkPoint(z, c, d)? 1.:0;
+    
+        //return float4(float3(bounded, 1.);
+        
+        
+      return colorTexture.sample(colorSampler, vertexIn.textureCoordinate+float2(bounded)/100.);
+}
+
 }
 
